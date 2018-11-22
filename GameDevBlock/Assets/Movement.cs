@@ -4,18 +4,31 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-
     [SerializeField]
-    private KeyCode up, down, left, right;
-    private bool leftSwitch, rightSwitch;
-    private float moveSpeed = 5f;
+    private KeyCode up, left, right, down;
+    private bool leftSwitch, rightSwitch, upSwitch;
+    private float moveSpeed;
     private Rigidbody2D body;
-    private Collider2D groundCol;
+    private Collider2D colBox;
+    private bool groundedtr;
+    private bool groundedcol;
+    private bool onWalltr;
+    private bool onWallcol;
+    private bool inAir;
+    private bool isAbleToJump;
+
+    private float ff; //framerate fix
+    private float maxSpeed;
+
 
     // Use this for initialization
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
+        colBox = GetComponent<Collider2D>();
+        ff = Time.deltaTime * 50;
+        moveSpeed = 5f * ff;
+        maxSpeed = 12;
     }
 
     // Update is called once per frame
@@ -25,39 +38,123 @@ public class Movement : MonoBehaviour
             leftSwitch = true;
         if (Input.GetKey(right))
             rightSwitch = true;
+        if (Input.GetKey(up))
+            upSwitch = true;
+        else
+            upSwitch = false;
+
+        if (groundedcol && isAbleToJump && upSwitch)
+        {
+            body.velocity = new Vector2(body.velocity.x, 17);
+            /*
+            if (groundedcol)
+                body.AddForce(new Vector2(0.0f, 420));
+            else
+                body.AddForce(new Vector2(0.0f, 90));
+                */
+        }
+
+        if (body.velocity.y > 0.9f)
+            colBox.sharedMaterial.friction = 0;
+        else
+            colBox.sharedMaterial.friction = 0.3f;
+
     }
 
     void FixedUpdate()
     {
-        // TODO: Ground check
-        if (true)
+        if (groundedcol)
         {
-            if (Input.GetKey(up))
+            body.drag = -0.1f;
+
+            if (leftSwitch && body.velocity.x > -maxSpeed)
             {
-                body.AddForce(new Vector2(0.0f, 100));
+                body.AddForce(new Vector2(-moveSpeed * 10, 0.0f));
+                leftSwitch = false;
+                Debug.Log(body.velocity.magnitude);
             }
 
-            if (Input.GetKey(down))
+            if (rightSwitch && body.velocity.x < maxSpeed)
             {
+                body.AddForce(new Vector2(moveSpeed * 10, 0.0f));
+                rightSwitch = false;
+                Debug.Log(body.velocity.magnitude);
+            }
+        }
 
+        else if (inAir)
+        {
+            isAbleToJump = false;
+            //Debug.Log("isAbleToJump: 0");
+            body.drag = 0.4f;
+
+            if (leftSwitch && body.velocity.x > -maxSpeed)
+            {
+                body.AddForce(new Vector2(-moveSpeed * 6f, 0.0f));
+                leftSwitch = false;
+                Debug.Log(body.velocity.magnitude);
             }
 
+            if (rightSwitch && body.velocity.magnitude < maxSpeed)
+            {
+                body.AddForce(new Vector2(moveSpeed * 6f, 0.0f));
+                rightSwitch = false;
+                Debug.Log(body.velocity.magnitude);
+            }
+        }
+
+        else // void state
+        {
             if (leftSwitch)
             {
-                body.AddForce(new Vector2(-moveSpeed * 5, 0.0f));
+                body.AddForce(new Vector2(-moveSpeed * 20f, 0.0f));
                 leftSwitch = false;
             }
 
             if (rightSwitch)
             {
-                body.AddForce(new Vector2(moveSpeed * 5, 0.0f));
+                body.AddForce(new Vector2(moveSpeed * 20f, 0.0f));
                 rightSwitch = false;
             }
         }
     }
 
-    public void onTriggerStay2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D col)
     {
+        if (col.CompareTag("ground"))
+            groundedtr = true;
+    }
 
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.CompareTag("ground"))
+            groundedtr = false;
+    }
+
+    void OnCollisionStay2D(Collision2D col)
+    {
+        inAir = false;
+
+        if (col.gameObject.CompareTag("ground"))
+            groundedcol = true;
+        else if (col.gameObject.CompareTag("wall"))
+            onWallcol = true;
+
+        if (!upSwitch)
+        {
+            isAbleToJump = true;
+            //Debug.Log("isAbleToJump: 1");
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D col)
+    {
+        inAir = true;
+
+        if (col.gameObject.CompareTag("ground"))
+            groundedcol = false;
+
+        if (col.gameObject.CompareTag("wall"))
+            onWallcol = false;
     }
 }
