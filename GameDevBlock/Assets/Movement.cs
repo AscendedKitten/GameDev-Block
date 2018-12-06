@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField]
-    private KeyCode up, left, right, down;
+    [SerializeField] private KeyCode up, left, right;
     private bool leftSwitch, rightSwitch, upSwitch;
-    private float moveSpeed;
     private Rigidbody2D body;
     private Collider2D colBox;
     private bool groundedtr;
@@ -17,18 +15,22 @@ public class Movement : MonoBehaviour
     private bool inAir;
     private bool isAbleToJump;
 
-    private float ff; //framerate fix
-    private float maxSpeed;
+    [Header("Speed")]
+    [SerializeField] [Range(200, 1000)] private float acceleration = 100;
+    private float moveSpeed;
+    [SerializeField] private float maxSpeed = 12;
 
+    [Header("Jumping")]
+    [SerializeField] private float jumpHeight = 25;
+    [SerializeField] private float fallMultiplier = 2.5f;
+    [SerializeField] private float jumpFallMultiplier = 2f;
 
     // Use this for initialization
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
         colBox = GetComponent<Collider2D>();
-        ff = Time.deltaTime * 50;
-        moveSpeed = 5f * ff;
-        maxSpeed = 12;
+        moveSpeed = acceleration * Time.deltaTime;
     }
 
     // Update is called once per frame
@@ -43,43 +45,46 @@ public class Movement : MonoBehaviour
         else
             upSwitch = false;
 
+        //JUMP
         if (groundedcol && isAbleToJump && upSwitch)
+            body.velocity = new Vector2(body.velocity.x, jumpHeight);
+
+        if (body.velocity.y < 0f)
+            body.velocity += Vector2.up * Physics2D.gravity.y * fallMultiplier * Time.deltaTime;
+        else if (body.velocity.y > 0f && !upSwitch)
+            body.velocity += Vector2.up * Physics2D.gravity.y * jumpFallMultiplier * Time.deltaTime;
+
+        /*
+        if (body.velocity.y > 0.1f)
         {
-            body.velocity = new Vector2(body.velocity.x, 17);
-            /*
-            if (groundedcol)
-                body.AddForce(new Vector2(0.0f, 420));
-            else
-                body.AddForce(new Vector2(0.0f, 90));
-                */
-        }
-
-        if (body.velocity.y > 0.9f)
             colBox.sharedMaterial.friction = 0;
+        }
         else
-            colBox.sharedMaterial.friction = 0.3f;
-
+        {
+            colBox.sharedMaterial.friction = 1;
+        }
+        */
     }
 
     void FixedUpdate()
     {
         if (groundedcol)
         {
-            body.drag = -0.1f;
+            body.drag = 0f;
 
             if (leftSwitch && body.velocity.x > -maxSpeed)
             {
                 body.AddForce(new Vector2(-moveSpeed * 10, 0.0f));
                 leftSwitch = false;
-                Debug.Log(body.velocity.magnitude);
             }
 
             if (rightSwitch && body.velocity.x < maxSpeed)
             {
                 body.AddForce(new Vector2(moveSpeed * 10, 0.0f));
                 rightSwitch = false;
-                Debug.Log(body.velocity.magnitude);
             }
+
+            Debug.Log(body.velocity.x);
         }
 
         else if (inAir)
@@ -92,16 +97,17 @@ public class Movement : MonoBehaviour
             {
                 body.AddForce(new Vector2(-moveSpeed * 6f, 0.0f));
                 leftSwitch = false;
-                Debug.Log(body.velocity.magnitude);
             }
 
-            if (rightSwitch && body.velocity.magnitude < maxSpeed)
+            if (rightSwitch && body.velocity.x < maxSpeed)
             {
                 body.AddForce(new Vector2(moveSpeed * 6f, 0.0f));
                 rightSwitch = false;
-                Debug.Log(body.velocity.magnitude);
             }
+
+            Debug.Log(body.velocity.x);
         }
+        
 
         else // void state
         {
