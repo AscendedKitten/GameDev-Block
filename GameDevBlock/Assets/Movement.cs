@@ -8,20 +8,20 @@ public class Movement : MonoBehaviour
     private bool leftSwitch, rightSwitch, upSwitch;
     private Rigidbody2D body;
     private Collider2D colBox;
+    private bool groundedtr;
     private bool groundedcol;
+    private bool onWalltr;
     private bool onWallcol;
     private bool inAir;
     private bool isAbleToJump;
-    private bool facedRight = true;
 
     [Header("Speed")]
-    [SerializeField] [Range(200, 1000)] private float acceleration = 380;
+    [SerializeField] [Range(200, 1000)] private float acceleration = 100;
     private float moveSpeed;
     [SerializeField] private float maxSpeed = 12;
 
     [Header("Jumping")]
-    [SerializeField] private float jumpHeight = 22;
-    [SerializeField] private float wallJumpForce = 100;
+    [SerializeField] private float jumpHeight = 25;
     [SerializeField] private float fallMultiplier = 2.5f;
     [SerializeField] private float jumpFallMultiplier = 2f;
 
@@ -45,29 +45,25 @@ public class Movement : MonoBehaviour
         else
             upSwitch = false;
 
-        //JUMPING
-        if (isAbleToJump && upSwitch)
-        {
-            if (groundedcol)
-                body.velocity = new Vector2(body.velocity.x, jumpHeight);
-            else if (onWallcol)
-            {
-                if (facedRight)
-                    body.velocity = new Vector2(-wallJumpForce, jumpHeight*3/4);
-                else
-                    body.velocity = new Vector2(wallJumpForce, jumpHeight*3/4);
-            }
-        }
+        //JUMP
+        if (groundedcol && isAbleToJump && upSwitch)
+            body.velocity = new Vector2(body.velocity.x, jumpHeight);
 
         if (body.velocity.y < 0f)
             body.velocity += Vector2.up * Physics2D.gravity.y * fallMultiplier * Time.deltaTime;
         else if (body.velocity.y > 0f && !upSwitch)
             body.velocity += Vector2.up * Physics2D.gravity.y * jumpFallMultiplier * Time.deltaTime;
 
+        /*
         if (body.velocity.y > 0.1f)
+        {
             colBox.sharedMaterial.friction = 0;
+        }
         else
+        {
             colBox.sharedMaterial.friction = 1;
+        }
+        */
     }
 
     void FixedUpdate()
@@ -88,7 +84,7 @@ public class Movement : MonoBehaviour
                 rightSwitch = false;
             }
 
-            //Debug.Log(body.velocity.x);
+            Debug.Log(body.velocity.x);
         }
 
         else if (inAir)
@@ -111,20 +107,7 @@ public class Movement : MonoBehaviour
 
             Debug.Log(body.velocity.x);
         }
-        else if (onWallcol)
-        {
-            if (leftSwitch)
-            {
-                body.AddForce(new Vector2(-moveSpeed * 17f, 0.0f));
-                leftSwitch = false;
-            }
-
-            if (rightSwitch)
-            {
-                body.AddForce(new Vector2(moveSpeed * 17f, 0.0f));
-                rightSwitch = false;
-            }
-        }
+        
 
         else // void state
         {
@@ -140,6 +123,18 @@ public class Movement : MonoBehaviour
                 rightSwitch = false;
             }
         }
+    }
+
+    void OnTriggerStay2D(Collider2D col)
+    {
+        if (col.CompareTag("ground"))
+            groundedtr = true;
+    }
+
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.CompareTag("ground"))
+            groundedtr = false;
     }
 
     void OnCollisionStay2D(Collision2D col)
@@ -158,7 +153,6 @@ public class Movement : MonoBehaviour
         }
     }
 
-
     void OnCollisionExit2D(Collision2D col)
     {
         inAir = true;
@@ -168,11 +162,5 @@ public class Movement : MonoBehaviour
 
         if (col.gameObject.CompareTag("wall"))
             onWallcol = false;
-
-        if (body.velocity.x < 0)
-            facedRight = false;
-        else if (body.velocity.x > 0)
-            facedRight = true;
-        Debug.Log("FacedRight: " + facedRight);
     }
 }
