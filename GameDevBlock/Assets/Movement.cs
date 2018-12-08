@@ -54,16 +54,14 @@ public class Movement : MonoBehaviour
         else if (body.velocity.y > 0f && !upSwitch)
             body.velocity += Vector2.up * Physics2D.gravity.y * jumpFallMultiplier * Time.deltaTime;
 
-        /*
+        //WALL JUMP
+        if (onWallcol && isAbleToJump && upSwitch)
+            body.velocity = new Vector2(body.velocity.x, jumpHeight);
+
         if (body.velocity.y > 0.1f)
-        {
             colBox.sharedMaterial.friction = 0;
-        }
         else
-        {
             colBox.sharedMaterial.friction = 1;
-        }
-        */
     }
 
     void FixedUpdate()
@@ -107,7 +105,20 @@ public class Movement : MonoBehaviour
 
             Debug.Log(body.velocity.x);
         }
-        
+        else if (onWallcol)
+        {
+            if (leftSwitch)
+            {
+                body.AddForce(new Vector2(-moveSpeed * 17f, 0.0f));
+                leftSwitch = false;
+            }
+
+            if (rightSwitch)
+            {
+                body.AddForce(new Vector2(moveSpeed * 17f, 0.0f));
+                rightSwitch = false;
+            }
+        }
 
         else // void state
         {
@@ -129,11 +140,15 @@ public class Movement : MonoBehaviour
     {
         if (col.CompareTag("ground"))
             groundedtr = true;
+        else if (col.CompareTag("wall"))
+            groundedtr = true;
     }
 
     void OnTriggerExit2D(Collider2D col)
     {
         if (col.CompareTag("ground"))
+            groundedtr = false;
+        else if (col.CompareTag("wall"))
             groundedtr = false;
     }
 
