@@ -54,7 +54,7 @@ public class Movement : MonoBehaviour
             upSwitch = false;
 
         //JUMPING
-        if (isAbleToJump && upSwitch)
+        if (isAbleToJump && Input.GetKeyDown(up))
         {
             if (grounded)
                 body.velocity = new Vector2(body.velocity.x, jumpHeight);
