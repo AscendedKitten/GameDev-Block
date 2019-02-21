@@ -11,6 +11,7 @@ public class Movement : MonoBehaviour
     private bool grounded;
     private bool onWall;
     private bool inAir;
+    private bool jumpBuffer;
     private bool isAbleToJump;
     private bool facedRight;
 
@@ -54,7 +55,10 @@ public class Movement : MonoBehaviour
             upSwitch = false;
 
         //JUMPING
-        if (isAbleToJump && Input.GetKeyDown(up))
+        if (Input.GetKeyDown(up))
+            jumpBuffer = true;
+
+        if (isAbleToJump && jumpBuffer)
         {
             if (grounded)
                 body.velocity = new Vector2(body.velocity.x, jumpHeight);
@@ -66,9 +70,8 @@ public class Movement : MonoBehaviour
                 else
                     body.velocity = new Vector2(wallJumpForce, jumpHeight * 4 / 5);
             }
-
+            jumpBuffer = false;
         }
-
 
         //SHORT/LONG JUMPS, FRICTION
         if (body.velocity.y < 0f)
