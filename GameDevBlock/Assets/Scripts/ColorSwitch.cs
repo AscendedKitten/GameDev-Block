@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class ColorScript : MonoBehaviour
+public class ColorSwitch : MonoBehaviour
 {
 
     [Header("Tilemaps")]
@@ -13,6 +13,9 @@ public class ColorScript : MonoBehaviour
 
     private TilemapRenderer primary_tilemapRenderer;
     private TilemapRenderer secondary_tilemapRenderer;
+
+    private TilemapCollider2D primary_tilemapCollider;
+    private TilemapCollider2D secondary_tilemapCollider;
 
 	[Header("Settings")]
 	[SerializeField] private KeyCode switchButton;
@@ -30,6 +33,12 @@ public class ColorScript : MonoBehaviour
             {
                 primary_tilemapRenderer = primary_tilemap.GetComponent<TilemapRenderer>();
                 secondary_tilemapRenderer = secondary_tilemap.GetComponent<TilemapRenderer>();
+
+                if (primary_tilemap.GetComponent<TilemapCollider2D>() != null && secondary_tilemap.GetComponent<TilemapCollider2D>() != null)
+                {
+                    primary_tilemapCollider = primary_tilemap.GetComponent<TilemapCollider2D>();
+                    secondary_tilemapCollider = secondary_tilemap.GetComponent<TilemapCollider2D>();
+                }
             }
             else
             {
@@ -41,7 +50,10 @@ public class ColorScript : MonoBehaviour
             throw new Exception("No tilemaps have been supplied.");
         }
 		primary_tilemapRenderer.enabled = true;
+        primary_tilemapCollider.enabled = true;
+
 		secondary_tilemapRenderer.enabled = false;
+        secondary_tilemapCollider.enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -68,14 +80,22 @@ public class ColorScript : MonoBehaviour
                     //deactivate the secondary color when the primary color is active
                     //Primary color is by default active
                     //Secondary color is by default deactived
+
                     primary_tilemapRenderer.enabled = true;
+                    primary_tilemapCollider.enabled = true;
+
                     secondary_tilemapRenderer.enabled = false;
+                    secondary_tilemapCollider.enabled = false;
                 }
                 else if(!primaryColorActive)
                 {
                     //deactivate the primary color when the secondary color is active
+
                     primary_tilemapRenderer.enabled = false;
+                    primary_tilemapCollider.enabled = false;
+
                     secondary_tilemapRenderer.enabled = true;
+                    secondary_tilemapCollider.enabled = true;
                 }
             }
 		}
