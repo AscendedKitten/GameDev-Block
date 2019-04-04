@@ -45,15 +45,34 @@ public class Movement : MonoBehaviour
     void Update()
     {
         //INPUTS
-        if (Input.GetKey(left))
+        if (Input.acceleration.x < 0)
             leftSwitch = true;
-        if (Input.GetKey(right))
+        if (Input.acceleration.x > 0)
             rightSwitch = true;
-        if (Input.GetKey(up))
+
+
+        var fingerCount = 0;
+        foreach (var touch in Input.touches)
+        {
+            if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled)
+                fingerCount++;
+        
+
+
+        }
+        if (fingerCount > 0)
             upSwitch = true;
         else
             upSwitch = false;
 
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            
+            if(touch.phase == TouchPhase.Began)
+                jumpBuffer = true;
+
+        }
         //JUMPING
         if (Input.GetKeyDown(up))
             jumpBuffer = true;
