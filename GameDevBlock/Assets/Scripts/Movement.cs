@@ -19,6 +19,8 @@ public class Movement : MonoBehaviour
     [SerializeField] [Range(200, 1000)] private float acceleration = 380;
     private float moveSpeed;
     [SerializeField] private float maxSpeed = 13;
+    [SerializeField] private float leftThreshold = 0.15f;
+    [SerializeField] private float rightThreshold = 0.15f;
 
     [Header("Jumping")]
     [SerializeField] private float jumpHeight = 20;
@@ -44,10 +46,13 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+Debug.Log("Accelerometer: "+Input.acceleration.x);
+
         //INPUTS
-        if (Input.acceleration.x < 0)
+        if (Input.acceleration.x < leftThreshold * -1)
             leftSwitch = true;
-        if (Input.acceleration.x > 0)
+        if (Input.acceleration.x > rightThreshold)
             rightSwitch = true;
 
 
@@ -73,9 +78,6 @@ public class Movement : MonoBehaviour
                 jumpBuffer = true;
 
         }
-        //JUMPING
-        if (Input.GetKeyDown(up))
-            jumpBuffer = true;
 
         if (isAbleToJump && jumpBuffer)
         {
