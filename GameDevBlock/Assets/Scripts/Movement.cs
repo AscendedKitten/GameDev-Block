@@ -12,7 +12,6 @@ public class Movement : MonoBehaviour
     private bool onWall;
     private bool inAir;
     private bool jumpBuffer;
-    private bool isAbleToJump;
     private bool facedRight;
 
     [Header("Speed")]
@@ -26,10 +25,17 @@ public class Movement : MonoBehaviour
     [SerializeField] private float fallMultiplier = 2.5f;
     [SerializeField] private float jumpFallMultiplier = 2f;
 
+    int maxJumps = 1;
+    int currentJumps = 0;
+    int maxWalljumps = 2;
+    int currentWalljumps = 0;
+
     public enum Direction
     {
         bottom,left,right
     }
+
+    
 
 
     // Use this for initialization
@@ -58,17 +64,29 @@ public class Movement : MonoBehaviour
         if (Input.GetKeyDown(up))
             jumpBuffer = true;
 
-        if (isAbleToJump && jumpBuffer)
+        if (currentJumps < maxJumps && jumpBuffer)
         {
-            if (grounded)
+            if (grounded) {
+                currentJumps += 1;
+                grounded = false;
+                onWall = false;
                 body.velocity = new Vector2(body.velocity.x, jumpHeight);
 
+            }
             else if (onWall)
             {
-                if (facedRight)
-                    body.velocity = new Vector2(-wallJumpForce, jumpHeight * 4 / 5);
-                else
-                    body.velocity = new Vector2(wallJumpForce, jumpHeight * 4 / 5);
+
+                if(currentWalljumps < maxWalljumps) {
+
+                    currentWalljumps++;
+
+                    if (facedRight)
+                        body.velocity = new Vector2(-wallJumpForce, jumpHeight * 4 / 5);
+                    else
+                        body.velocity = new Vector2(wallJumpForce, jumpHeight * 4 / 5);
+            
+                }
+
             }
             jumpBuffer = false;
         }
@@ -87,27 +105,24 @@ public class Movement : MonoBehaviour
 
     void FixedUpdate()
     {
-        //Debug.Log(body.velocity.x);
-        //Debug.Log("isAbleToJump: " + isAbleToJump);
-        //Debug.Log(body.velocity.y);
-        //Debug.Log("FacedRight: " + facedRight);
 
         if (grounded)
         {
+            currentJumps = 0;
+            currentWalljumps = 0;
             body.drag = 0f;
-            isAbleToJump = true;
             SetSpeedH(10);
+            
         }
         else if (onWall)
         {
+            currentJumps = 0;
             body.drag = 0f;
-            isAbleToJump = true;
             SetSpeedH(17);
         }
         else if (inAir)
         {
             body.drag = 0.4f;
-            isAbleToJump = false;
             SetSpeedH(6);
         }
         else // void state
@@ -116,6 +131,7 @@ public class Movement : MonoBehaviour
         }
     }
 
+    
     public void CollEnter(Direction direction)
     {
         switch (direction)
@@ -136,8 +152,10 @@ public class Movement : MonoBehaviour
         }
         inAir = false;
     }
+    
     public void CollExit(Direction direction)
     {
+
         switch (direction)
         {
             case Direction.right:
