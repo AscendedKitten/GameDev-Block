@@ -6,6 +6,12 @@ using UnityEngine.Tilemaps;
 
 public class ColorSwitch : MonoBehaviour
 {
+    /*
+     * Apply this script to the neutral tilemap and add 
+     * - Tilemap collider
+     * - Tilemap renderer
+     */
+
 
     [Header("Tilemaps")]
     [SerializeField] private Tilemap primary_tilemap;
