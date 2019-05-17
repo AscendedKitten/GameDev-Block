@@ -6,6 +6,8 @@ using System.Linq;
 
 public class RopeSystem : MonoBehaviour
 {
+   
+    public GameObject player;
     public GameObject ropeHingeAnchor;
     public DistanceJoint2D ropeJoint;
     public Transform crosshair;
