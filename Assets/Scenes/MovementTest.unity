@@ -1309,12 +1309,12 @@ PrefabInstance:
     - target: {fileID: 114098302255931958, guid: 53e9885c3d2e600429dfd725a5b7c546,
         type: 3}
       propertyPath: wallJumpForce
-      value: 14
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 114098302255931958, guid: 53e9885c3d2e600429dfd725a5b7c546,
         type: 3}
       propertyPath: maxSpeed
-      value: 15
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 114098302255931958, guid: 53e9885c3d2e600429dfd725a5b7c546,
         type: 3}
@@ -1366,6 +1366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd1ce2e784b0bcd4ba81ec19d3b632dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   ropeHingeAnchor: {fileID: 1503567413}
   ropeJoint: {fileID: 2091591855}
   crosshair: {fileID: 372174339}
