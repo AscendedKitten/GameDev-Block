@@ -22,7 +22,7 @@ public class Movement : MonoBehaviour
 
     [Header("Jumping")]
     [SerializeField] private float jumpHeight = 20;
-    [SerializeField] private float wallJumpForce = 12;
+    [SerializeField] private float wallJumpForce = 16;
     [SerializeField] private float fallMultiplier = 2.5f;
     [SerializeField] private float jumpFallMultiplier = 2f;
 
