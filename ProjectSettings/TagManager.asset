@@ -6,6 +6,8 @@ TagManager:
   tags:
   - wall
   - ground
+  - ControlsMenuGrid
+  - PauseMenu
   layers:
   - Default
   - TransparentFX

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField] private KeyCode up, left, right;
+    private KeyCode up, left, right;
     private bool leftSwitch, rightSwitch, upSwitch;
     private Rigidbody2D body;
     private Collider2D colBox;
@@ -45,6 +45,10 @@ public class Movement : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        up = GameController.GC.Up;
+        left = GameController.GC.Left;
+        right = GameController.GC.Right;
+        
         body = GetComponent<Rigidbody2D>();
         colBox = GetComponent<Collider2D>();
         playerSprite = GetComponent<SpriteRenderer>();
