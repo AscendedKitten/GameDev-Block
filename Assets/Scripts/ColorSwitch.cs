@@ -22,9 +22,8 @@ public class ColorSwitch : MonoBehaviour
 
     private TilemapCollider2D primary_tilemapCollider;
     private TilemapCollider2D secondary_tilemapCollider;
-
-	[Header("Settings")]
-	[SerializeField] private KeyCode switchButton;
+    
+    private KeyCode switchButton;
 
 	private bool primaryColorActive = true;
 
@@ -65,6 +64,7 @@ public class ColorSwitch : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		switchButton = GameController.GC.Switch;
         if (Input.GetKeyDown(switchButton))
 		{
 			if (!inSwitch)
