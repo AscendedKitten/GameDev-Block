@@ -13,10 +13,15 @@ public class RopeSystem : MonoBehaviour
     public Transform crosshair;
     public SpriteRenderer crosshairSprite;
     public Movement playerMovement;
+
     private bool ropeAttached;
     private Vector2 playerPosition;
     private Rigidbody2D ropeHingeAnchorRb;
+    private Rigidbody2D body;
     private SpriteRenderer ropeHingeAnchorSprite;
+
+    [SerializeField]
+    private static bool hookEnabled = true;
     
     public LineRenderer ropeRenderer;
     public LayerMask ropeLayerMask;
@@ -49,7 +54,7 @@ public class RopeSystem : MonoBehaviour
     
         var aimDirection = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg) * Vector2.right;
         playerPosition = transform.position;
-    
+
         
         if (!ropeAttached)
         {
@@ -141,37 +146,42 @@ public class RopeSystem : MonoBehaviour
     
     private void HandleInput(Vector2 aimDirection)
     {
-        if (Input.GetMouseButton(0))
+        if (hookEnabled)
         {
-            if (ropeAttached) return;
-            ropeRenderer.enabled = true;
-
-            var hit = Physics2D.Raycast(playerPosition, aimDirection, ropeMaxCastDistance, ropeLayerMask);
-            
-            if (hit.collider != null)
+            if (Input.GetMouseButton(0))
             {
-                ropeAttached = true;
-                if (!ropePositions.Contains(hit.point))
+                if (ropeAttached) return;
+                ropeRenderer.enabled = true;
+
+                var hit = Physics2D.Raycast(playerPosition, aimDirection, ropeMaxCastDistance, ropeLayerMask);
+
+
+
+                if (hit.collider != null && hit.distance <= 5.5)
                 {
-                    // Jump slightly to distance the player a little from the ground after grappling to something.
-                    transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 2f), ForceMode2D.Impulse);
-                    ropePositions.Add(hit.point);
-                    ropeJoint.distance = Vector2.Distance(playerPosition, hit.point);
-                    ropeJoint.enabled = true;
-                    ropeHingeAnchorSprite.enabled = true;
+                    ropeAttached = true;
+                    if (!ropePositions.Contains(hit.point))
+                    {
+                        // Jump slightly to distance the player a little from the ground after grappling to something.
+                        transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 2f), ForceMode2D.Impulse);
+                        ropePositions.Add(hit.point);
+                        ropeJoint.distance = Vector2.Distance(playerPosition, hit.point);
+                        ropeJoint.enabled = true;
+                        ropeHingeAnchorSprite.enabled = true;
+                    }
+                }
+                else
+                {
+                    ropeRenderer.enabled = false;
+                    ropeAttached = false;
+                    ropeJoint.enabled = false;
                 }
             }
-            else
-            {
-                ropeRenderer.enabled = false;
-                ropeAttached = false;
-                ropeJoint.enabled = false;
-            }
-        }
 
-        if (Input.GetMouseButton(1))
-        {
-            ResetRope();
+            if (Input.GetMouseButton(1))
+            {
+                ResetRope();
+            }
         }
     }
 
