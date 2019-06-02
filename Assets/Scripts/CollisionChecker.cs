@@ -16,7 +16,7 @@ public class CollisionChecker : MonoBehaviour {
         }
 	}
 	
-    void OnTriggerEnter2D()
+    void OnTriggerStay2D()
     {
         movement.CollEnter(direction);
     }
