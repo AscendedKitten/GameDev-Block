@@ -9,8 +9,13 @@ public class LevelEnd : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Player"))
         {
-            int y = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene(y + 1);
-        }
+
+            int currentIndex = SceneManager.GetActiveScene().buildIndex;
+
+            if (currentIndex == 6)
+                SceneManager.LoadScene(0);
+            else
+                SceneManager.LoadScene(currentIndex + 1);
+        } 
     }
 }

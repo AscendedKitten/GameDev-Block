@@ -9,21 +9,21 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 21f8c7554a3d5dc48a4a135d92d13109
   - enabled: 1
-    path: Assets/Scenes/PauseMenu.unity
-    guid: 26c41e5538046984fa07b4536a2db4e5
+    path: Assets/Scenes/Level01.unity
+    guid: 01761660b6469a2429e8f3a7925d4875
   - enabled: 1
-    path: Assets/Scenes/MovementTest.unity
-    guid: 2a92e2f1cecd1f04197c8a8f93ae8b84
+    path: Assets/Scenes/Level02.unity
+    guid: b9e9874224d65b14ba0f3e1883edc295
   - enabled: 1
-    path: Assets/Scenes/Color-Switch_testScene.unity
-    guid: e1359f4dd24c4594a86f87285ebd88e5
+    path: Assets/Scenes/Level03.unity
+    guid: 93b69df0fc07a1d4b84a27ecc60ba2ab
   - enabled: 1
-    path: Assets/Scenes/TestScene2.unity
-    guid: e64378b68b5427e44b72a80ec386cfad
+    path: Assets/Scenes/Level04.unity
+    guid: 39f3685355740ca40ba06bf3a95876aa
   - enabled: 1
-    path: Assets/Scenes/TestScene3.unity
-    guid: c9a7969952f8023489aff3504cc05d14
+    path: Assets/Scenes/Level05.unity
+    guid: ddd4f5fe08ab38a44896c47ad8e1c036
   - enabled: 1
-    path: Assets/Scenes/TestScene4.unity
-    guid: 93dee32107596294296ad693c98cfc35
+    path: Assets/Scenes/Level06.unity
+    guid: bc977235e66f5fc4bbf7e414b97e42d0
   m_configObjects: {}

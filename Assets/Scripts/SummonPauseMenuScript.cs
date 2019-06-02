@@ -37,7 +37,7 @@ public class SummonPauseMenuScript : MonoBehaviour
 
     public static void Resume()
     {
-        //TODO Enable hook
+        RopeSystem.hookEnabled = true;
         PauseMenuUI.gameObject.SetActive(false);
         Time.timeScale = 1;
         GameIsPaused = false;
@@ -45,7 +45,7 @@ public class SummonPauseMenuScript : MonoBehaviour
 
     public void Pause()
     {
-        //TODO Disable hook
+        RopeSystem.hookEnabled = false;
         PauseMenuUI.gameObject.SetActive(true);
         Time.timeScale = 0;
         GameIsPaused = true;

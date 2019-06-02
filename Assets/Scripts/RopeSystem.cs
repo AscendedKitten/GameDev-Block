@@ -20,8 +20,7 @@ public class RopeSystem : MonoBehaviour
     private Rigidbody2D body;
     private SpriteRenderer ropeHingeAnchorSprite;
 
-    [SerializeField]
-    private static bool hookEnabled = true;
+    public static bool hookEnabled = true;
     
     public LineRenderer ropeRenderer;
     public LayerMask ropeLayerMask;
