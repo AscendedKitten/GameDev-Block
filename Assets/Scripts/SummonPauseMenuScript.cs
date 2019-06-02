@@ -2,32 +2,52 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class SummonPauseMenuScript : MonoBehaviour
 {
-    [SerializeField] public Canvas Canvas;
-    [SerializeField] public List<GameObject> Objects;
-    private KeyCode summonKey;
-    public bool menuActive;
+    public static bool GameIsPaused = false;
+    public static RectTransform PauseMenuUI;
 
-    void Start()
+    private void Start()
     {
-        summonKey = GameController.GC.PauseMenuKey;
-        menuActive = false;
-    }
-    
-    // Update is called once per frame
-    void Update()
-    {
-        PauseGame();
+        FindPauseMenuUI();
     }
 
-    public void PauseGame()
+    private void Update()
     {
-        try
+        if (Input.GetKeyDown(GameController.GC.PauseMenuKey))
         {
-            Canvas = GameObject.FindWithTag("PauseMenu").GetComponent<Canvas>();
-        }catch(NullReferenceException e){}
+            if (GameIsPaused)
+            {
+                Resume();
+            }
+            else
+            {
+                Pause();
+            }
+        }
+    }
+
+    void FindPauseMenuUI()
+    {
+        PauseMenuUI = GameObject.FindWithTag("PauseMenuCanvas").transform.GetChild(0).GetComponent<RectTransform>();
+    }
+
+    public static void Resume()
+    {
+        //TODO Enable hook
+        PauseMenuUI.gameObject.SetActive(false);
+        Time.timeScale = 1;
+        GameIsPaused = false;
+    }
+
+    public void Pause()
+    {
+        //TODO Disable hook
+        PauseMenuUI.gameObject.SetActive(true);
+        Time.timeScale = 0;
+        GameIsPaused = true;
     }
 }

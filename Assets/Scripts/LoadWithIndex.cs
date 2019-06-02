@@ -13,6 +13,10 @@ public class LoadWithIndex : MonoBehaviour
     {
         if (index >= 0)
         {
+            if (index == 0)
+            {
+                SummonPauseMenuScript.Resume();
+            }
             SceneManager.LoadScene(index);
         }
     }
@@ -32,9 +36,9 @@ public class LoadWithIndex : MonoBehaviour
 
     public void ResumeGame()
     {
-        // TODO
-        // - First: Pause the Game in movement script by pressing ESCAPE and by using [Time.timeScale = 0]. This should active the Pause-Menu (not the scene, the panel).
-        // - Resume the Game by pressing ESCAPE again and by using [Time.timeScale = 1]. This should hide the Pause-Menu again.
+        //TODO
+        //Dont forget to add the SummonPauseMenuScript to the MainCamera in each Scene you want to have a pause menu.
+        SummonPauseMenuScript.Resume();
     }
 
     public void ProgressToNextLevel()

@@ -8,7 +8,6 @@ TagManager:
   - ground
   - ControlsMenuGrid
   - PauseMenuCanvas
-  - PauseMenu
   layers:
   - Default
   - TransparentFX
